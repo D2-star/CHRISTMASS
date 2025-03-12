@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Bot Console</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #28a745;
+        }
+        #console {
+            background: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Preserve whitespace */
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function fetchConsoleOutput() {
+            fetch('/console_output')
+                .then(response => response.json())
+                .then(data => {
+                    const consoleDiv = document.getElementById('console');
+                    consoleDiv.innerHTML = data.join('\n'); // Join messages with new lines
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight; // Scroll to the bottom
+                })
+                .catch(error => console.error('Error fetching console output:', error));
+        }
+
+        // Fetch console output every 2 seconds
+        setInterval(fetchConsoleOutput, 2000);
+    </script>
+</head>
+<body>
+    <h1>Trading Bot Console</h1>
+    <div id="console"></div>
+    <button onclick="window.history.back()">Back</button>
+</body>
+</html>

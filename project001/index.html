@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Bot Dashboard</title>
+    <script>
+        async function login() {
+            const apiKey = document.getElementById('apiKey').value;
+            const response = await fetch('/signals', {
+                headers: {
+                    'x-api-key': apiKey
+                }
+            });
+            if (response.ok) {
+                const signals = await response.json();
+                document.getElementById('signals').innerText = JSON.stringify(signals, null, 2);
+            } else {
+                alert('Invalid API key');
+            }
+        }
+
+        async function saveSettings() {
+            const settings = {
+                // Add settings fields here
+            };
+            const response = await fetch('/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settings)
+            });
+            const result = await response.json();
+            alert(result.status);
+        }
+
+        async function loadSettings() {
+            const response = await fetch('/settings');
+            const settings = await response.json();
+            // Populate settings fields here
+        }
+
+        async function loadPerformanceMetrics() {
+            const response = await fetch('/performance_metrics');
+            const metrics = await response.json();
+            if (metrics.status === 'success') {
+                document.getElementById('performanceMetrics').innerText = JSON.stringify(metrics.data, null, 2);
+            } else {
+                alert(metrics.message);
+            }
+        }
+
+        window.onload = function() {
+            loadSettings();
+            loadPerformanceMetrics();
+        }
+    </script>
+</head>
+<body>
+    <h1>Trading Bot Dashboard</h1>
+    <div>
+        <h2>Login</h2>
+        <input type="text" id="apiKey" placeholder="Enter your API key">
+        <button onclick="login()">Login</button>
+        <pre id="signals"></pre>
+    </div>
+    <div>
+        <h2>Settings</h2>
+        <!-- Add settings fields here -->
+        <button onclick="saveSettings()">Save Settings</button>
+    </div>
+    <div>
+        <h2>Performance Metrics</h2>
+        <pre id="performanceMetrics"></pre>
+    </div>
+</body>
+</html>
